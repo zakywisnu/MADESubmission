@@ -7,6 +7,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -21,6 +22,9 @@ public interface MovieDao {
 
     @Query("DELETE FROM movie_table WHERE uid = :id")
     void deleteAMovie(int id);
+
+    @Delete
+    void delete(Movie movie);
 
     @Query("SELECT * FROM movie_table ORDER BY title DESC")
     LiveData<List<Movie>> getAllMovieDb();

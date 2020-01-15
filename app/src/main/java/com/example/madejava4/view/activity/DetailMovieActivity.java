@@ -2,9 +2,11 @@ package com.example.madejava4.view.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -51,7 +53,6 @@ public class DetailMovieActivity extends AppCompatActivity {
     private FavoriteViewModel viewModel;
 
 
-    MovieHelper movieHelper;
     private int id;
     private Movie movie;
     private FavoriteAdapter adapter;
@@ -62,7 +63,8 @@ public class DetailMovieActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         loading(true);
         Intent intent = getIntent();
-        movieHelper = MovieHelper.getINSTANCE(getApplicationContext());
+
+        fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_favorite_border_black_24dp));
 
         initToolbar();
         if (intent.hasExtra("movie")) {
