@@ -21,18 +21,13 @@ public class Movie implements Parcelable {
     private String release_date;
     private String backdrop_path;
     @SerializedName("media_type")
-    private String movie_type;
-
-    public int getUid() {
-        return uid;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
-
+    private String media_type;
     @PrimaryKey(autoGenerate = true)
     private int uid;
+
+    public Movie() {
+
+    }
 
     protected Movie(Parcel in) {
         id = in.readInt();
@@ -42,11 +37,8 @@ public class Movie implements Parcelable {
         overview = in.readString();
         release_date = in.readString();
         backdrop_path = in.readString();
-        movie_type = in.readString();
-    }
-
-    public Movie(){
-
+        media_type = in.readString();
+        uid = in.readInt();
     }
 
     @Override
@@ -58,7 +50,8 @@ public class Movie implements Parcelable {
         dest.writeString(overview);
         dest.writeString(release_date);
         dest.writeString(backdrop_path);
-        dest.writeString(movie_type);
+        dest.writeString(media_type);
+        dest.writeInt(uid);
     }
 
     @Override
@@ -134,12 +127,20 @@ public class Movie implements Parcelable {
         this.backdrop_path = backdrop_path;
     }
 
-    public String getMovie_type() {
-        return movie_type;
+    public String getMedia_type() {
+        return media_type;
     }
 
-    public void setMovie_type(String movie_type) {
-        this.movie_type = movie_type;
+    public void setMedia_type(String media_type) {
+        this.media_type = media_type;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 }
 

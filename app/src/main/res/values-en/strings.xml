@@ -16,4 +16,8 @@
     <string name="release_date">Release Date :</string>
     <string name="rating">Rating :</string>
     <string name="language">Language</string>
+    <string name="fav_removed">Added to Favorite</string>
+    <string name="fav_add">Removed from Favorite</string>
+    <string name="favorite_menu">Favorite</string>
+    <string name="favorite">Favorite</string>
 </resources>

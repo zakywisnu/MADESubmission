@@ -1,11 +1,5 @@
 package com.example.madejava4.view.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -18,6 +12,13 @@ import com.example.madejava4.view.fragment.MovieFragment;
 import com.example.madejava4.view.fragment.TvShowFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
     private String TITLE_KEY = "title";
     private String FRAGMENT_KEY = "fragment";
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.nav_view)
     BottomNavigationView navView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener =
             menuItem -> {
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new FavoriteFragment();
                         setActionBarTitle(title);
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.frame_container,fragment,fragment.getClass().getSimpleName())
+                                .replace(R.id.frame_container, fragment, fragment.getClass().getSimpleName())
                                 .commit();
                         return true;
                 }
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        initToolbar();
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
         if (savedInstanceState == null) {
             navView.setSelectedItemId(R.id.nav_movie);
@@ -72,8 +76,17 @@ public class MainActivity extends AppCompatActivity {
             setActionBarTitle(title);
         }
     }
-    private void setActionBarTitle(String title){
-        if (getSupportActionBar() != null){
+
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        toolbar.setTitle("");
+    }
+
+    private void setActionBarTitle(String title) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
         }
     }
@@ -86,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.language){
+        if (item.getItemId() == R.id.language) {
             Intent nIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
             startActivity(nIntent);
         }

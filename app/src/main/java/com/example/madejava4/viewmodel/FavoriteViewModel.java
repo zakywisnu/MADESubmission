@@ -29,8 +29,11 @@ public class FavoriteViewModel extends AndroidViewModel{
         return movieRepository.getMovieByType(type);
     }
 
-    public void insert(Movie movie){
-        movieRepository.insert(movie);
+    public void insert(Movie movie, String type){
+        movieRepository.insert(movie,type);
+    }
+    public void delete(Movie movie){
+        movieRepository.delete(movie);
     }
 
 }

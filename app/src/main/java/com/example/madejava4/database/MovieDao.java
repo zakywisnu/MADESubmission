@@ -2,7 +2,6 @@ package com.example.madejava4.database;
 
 import com.example.madejava4.model.Movie;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -17,6 +16,9 @@ public interface MovieDao {
     @Insert
     void insert(Movie movie);
 
+    @Query("UPDATE movie_table SET media_type = :media_type WHERE uid = :id")
+    void update(int id, String media_type);
+
     @Query("DELETE FROM movie_table")
     void deleteAll();
 
@@ -29,6 +31,6 @@ public interface MovieDao {
     @Query("SELECT * FROM movie_table ORDER BY title DESC")
     LiveData<List<Movie>> getAllMovieDb();
 
-    @Query("SELECT * FROM movie_table WHERE movie_type = :movieType")
+    @Query("SELECT * FROM movie_table WHERE media_type = :movieType")
     LiveData<List<Movie>> getMovieByType(String movieType);
 }

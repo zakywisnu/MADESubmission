@@ -1,20 +1,7 @@
 package com.example.madejava4.view.fragment;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +13,22 @@ import com.example.madejava4.adapter.MovieAdapter;
 import com.example.madejava4.model.Movie;
 import com.example.madejava4.view.activity.DetailMovieActivity;
 import com.example.madejava4.viewmodel.MoviesViewModel;
+import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MovieFragment extends Fragment {
     @BindView(R.id.movie_loading)
@@ -40,6 +40,8 @@ public class MovieFragment extends Fragment {
 
     private MovieAdapter adapter;
     private MoviesViewModel viewModel;
+
+    private String media_type;
 
     private Observer<ArrayList<Movie>> getMovie = new Observer<ArrayList<Movie>>() {
         @Override
@@ -67,7 +69,7 @@ public class MovieFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
         ButterKnife.bind(this, view);
         adapter = new MovieAdapter(getContext());
-        recView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        recView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recView.setAdapter(adapter);
         getMovieList();
         showMovie();
@@ -81,21 +83,21 @@ public class MovieFragment extends Fragment {
         adapter.setOnItemClickCallback(movie -> {
             Intent intent = new Intent(getActivity(), DetailMovieActivity.class);
             intent.putExtra("movie", movie);
+            intent.putExtra("movies", media_type);
             startActivity(intent);
         });
         loading(true);
 
     }
 
+
     public void getMovieList() {
-//        viewModel.setListMovie("movie",BuildConfig.API_KEY);
-//        viewModel.getTypes().observe(this, getMovie);
-        viewModel.getListMovie("movie", BuildConfig.API_KEY).observe(this,getMovie);
+        viewModel.getListMovie("movie", BuildConfig.API_KEY).observe(this, getMovie);
         showMovie();
     }
 
     public void showMovie() {
-        recView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+        recView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

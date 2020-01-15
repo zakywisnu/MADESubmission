@@ -6,24 +6,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.fragment.FavoriteFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/appbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            app:title="Favorite"
-            android:layout_height="?actionBarSize"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
-        app:layout_constraintTop_toBottomOf="@id/appbar_layout"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_width="match_parent"

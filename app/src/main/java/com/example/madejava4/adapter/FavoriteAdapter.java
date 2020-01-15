@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.madejava4.BuildConfig;
 import com.example.madejava4.R;
@@ -30,7 +29,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         this.onItemClickCallback = onItemClickCallback;
     }
 
-    public interface OnItemClickCallback{
+    public interface OnItemClickCallback {
         void onItemClicked(Movie movie);
     }
 
@@ -38,14 +37,15 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         this.context = context;
     }
 
-    public void setFavoriteMovie(List<Movie> movie){
+    public void setFavoriteMovie(List<Movie> movie) {
         this.movieList = movie;
         notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public FavoriteAdapter.FavoriteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new FavoriteViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_list, parent, false)) ;
+        return new FavoriteViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tv_list, parent, false));
     }
 
     @Override
@@ -59,16 +59,20 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     }
 
     public class FavoriteViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.movie_image)
+        @BindView(R.id.tv_show_image)
         ImageView movieImage;
+
         public FavoriteViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-        void bind(final Movie movie){
+
+        void bind(final Movie movie) {
             Glide.with(context)
                     .load(BuildConfig.BASE_IMAGE_URL + movie.getPoster_path())
                     .apply(new RequestOptions())
+                    .placeholder(R.drawable.ic_filter_tilt_shift_black_24dp)
+                    .error(R.drawable.ic_clear_black_24dp)
                     .into(movieImage);
             itemView.setOnClickListener(
                     view -> onItemClickCallback.onItemClicked(movieList.get(getAdapterPosition())));

@@ -16,4 +16,8 @@
     <string name="release_date">Tanggal Rilis :</string>
     <string name="rating">Nilai :</string>
     <string name="language">Bahasa</string>
+    <string name="fav_removed">Dihilangkan dari Favorit</string>
+    <string name="fav_add">Ditambahkan ke Favorit</string>
+    <string name="favorite_menu">Favorit</string>
+    <string name="favorite">Favorit</string>
 </resources>

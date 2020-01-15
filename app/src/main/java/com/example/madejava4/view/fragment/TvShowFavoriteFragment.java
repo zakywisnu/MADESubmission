@@ -3,9 +3,19 @@ package com.example.madejava4.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import com.example.madejava4.R;
+import com.example.madejava4.adapter.FavoriteAdapter;
+import com.example.madejava4.model.Movie;
+import com.example.madejava4.view.activity.DetailMovieActivity;
+import com.example.madejava4.viewmodel.FavoriteViewModel;
+
+import java.util.List;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,19 +25,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.madejava4.R;
-import com.example.madejava4.adapter.FavoriteAdapter;
-import com.example.madejava4.model.Movie;
-import com.example.madejava4.view.activity.DetailMovieActivity;
-import com.example.madejava4.viewmodel.FavoriteViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -36,6 +33,8 @@ public class TvShowFavoriteFragment extends Fragment {
     RecyclerView recyclerView;
     @BindView(R.id.fav_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.tv_fav_loading)
+    ProgressBar progressBar;
     private FavoriteAdapter adapter;
     private FavoriteViewModel viewModel;
 
@@ -43,32 +42,50 @@ public class TvShowFavoriteFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private Observer<ArrayList<Movie>> getTvs = new Observer<ArrayList<Movie>>() {
+    private Observer<List<Movie>> getTvs = new Observer<List<Movie>>() {
         @Override
-        public void onChanged(ArrayList<Movie> movies) {
-            if (movies != null){
-                adapter.setFavoriteMovie((ArrayList<Movie>) movies);
+        public void onChanged(List<Movie> movies) {
+            if (movies != null) {
+                adapter.setFavoriteMovie(movies);
+                loading(false);
             }
         }
     };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tv_show_favorite, container, false);
-        ButterKnife.bind(this,view);
-        adapter = new FavoriteAdapter(getActivity());
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
-        recyclerView.setAdapter(adapter);
         viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
+        ButterKnife.bind(this, view);
+        adapter = new FavoriteAdapter(getContext());
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recyclerView.setAdapter(adapter);
+        getTvList();
         adapter.setOnItemClickCallback(movie -> {
             Intent intent = new Intent(getActivity(), DetailMovieActivity.class);
             intent.putExtra("movie", movie);
             startActivity(intent);
         });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getTvList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return view;
     }
 
-//
+    private void getTvList() {
+        viewModel.getFavoriteType("tv").observe(this, getTvs);
+    }
+
+    public void loading(Boolean state) {
+        if (state) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else progressBar.setVisibility(View.GONE);
+    }
 
 }

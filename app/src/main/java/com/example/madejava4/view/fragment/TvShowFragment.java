@@ -1,20 +1,7 @@
 package com.example.madejava4.view.fragment;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +17,17 @@ import com.example.madejava4.viewmodel.MoviesViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class TvShowFragment extends Fragment {
     @BindView(R.id.movie_loading)
     ProgressBar progressBar;
@@ -39,11 +37,12 @@ public class TvShowFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
     private MovieAdapter adapter;
     private MoviesViewModel viewModel;
+    private String media_type;
 
     Observer<List<Movie>> getTvs = new Observer<List<Movie>>() {
         @Override
         public void onChanged(List<Movie> movies) {
-            if (movies != null){
+            if (movies != null) {
                 adapter.setMovieList((ArrayList<Movie>) movies);
                 loading(false);
             }
@@ -65,12 +64,13 @@ public class TvShowFragment extends Fragment {
         ButterKnife.bind(this, view);
         viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
         adapter = new MovieAdapter(getContext());
-        recView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+        recView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recView.setAdapter(adapter);
         getTvList();
         adapter.setOnItemClickCallback(tvShow -> {
             Intent intent = new Intent(getActivity(), DetailMovieActivity.class);
             intent.putExtra("movie", tvShow);
+            intent.putExtra("tv", media_type);
             startActivity(intent);
         });
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -84,14 +84,12 @@ public class TvShowFragment extends Fragment {
     }
 
     public void getTvList() {
-//        viewModel.setListMovie("tv", BuildConfig.API_KEY);
-//        viewModel.getTypes().observe(this, getTvs);
-        viewModel.getListMovie("tv", BuildConfig.API_KEY).observe(this,getTvs);
+        viewModel.getListMovie("tv", BuildConfig.API_KEY).observe(this, getTvs);
         showTv();
     }
 
     public void showTv() {
-        recView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+        recView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

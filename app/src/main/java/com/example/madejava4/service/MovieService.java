@@ -8,10 +8,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface MovieService {
-//    @GET("discover/movie")
-//    Call<MovieResponse> getMovieList (@Query("api_key") String api_key);
-//    @GET("discover/tv")
-//    Call<MovieResponse> getTvShowList (@Query("api_key") String api_key);
-    @GET("discover/{type}")
-    Call<MovieResponse> getListType (@Path("type") String type, @Query("api_key") String api_key);
+    @GET("discover/{media_type}")
+    Call<MovieResponse> getListType (@Path("media_type") String media_type, @Query("api_key") String api_key);
 }

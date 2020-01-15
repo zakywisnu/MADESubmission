@@ -3,16 +3,13 @@ package com.example.madejava4.service.repository;
 import android.app.Application;
 import android.util.Log;
 
-import com.example.madejava4.BuildConfig;
 import com.example.madejava4.model.Movie;
 import com.example.madejava4.model.MovieResponse;
 import com.example.madejava4.service.MovieInstance;
 import com.example.madejava4.service.MovieService;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,7 +23,7 @@ public class MovieRepository {
         this.application = application;
     }
 
-    public MutableLiveData<ArrayList<Movie>> getListMovie(String type, String api_key){
+    public MutableLiveData<ArrayList<Movie>> getListMovie(String type, String api_key) {
         MovieService movieService = MovieInstance.getService();
         Call<MovieResponse> movieResponseCall = movieService.getListType(type, api_key);
         movieResponseCall.enqueue(new Callback<MovieResponse>() {

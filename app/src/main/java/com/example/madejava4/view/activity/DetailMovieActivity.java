@@ -1,15 +1,10 @@
 package com.example.madejava4.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,7 +17,12 @@ import com.example.madejava4.model.Movie;
 import com.example.madejava4.viewmodel.FavoriteViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.example.madejava4.BuildConfig.BASE_IMAGE_URL;
 
@@ -47,13 +47,14 @@ public class DetailMovieActivity extends AppCompatActivity {
     AppBarLayout appBarLayout;
     @BindView(R.id.collapse_toolbar)
     CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.fab_fav)
-    FloatingActionButton fab;
+    @BindView(R.id.btn_fav)
+    ImageButton fav;
 
     private FavoriteViewModel viewModel;
+    String media_type;
 
+    static boolean isFavorite;
 
-    private int id;
     private Movie movie;
     private FavoriteAdapter adapter;
 
@@ -63,13 +64,21 @@ public class DetailMovieActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         loading(true);
         Intent intent = getIntent();
-
-        fab.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_favorite_border_black_24dp));
+        viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
+        if (isFavorite) {
+            fav.setImageResource(R.drawable.ic_favorite_black_24dp);
+        } else {
+            fav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        }
 
         initToolbar();
         if (intent.hasExtra("movie")) {
             movie = getIntent().getParcelableExtra("movie");
-            id = movie.getId();
+            if (intent.hasExtra("movies")) {
+                media_type = "movie";
+            } else if (intent.hasExtra("tv")) {
+                media_type = "tv";
+            }
             String imageUrl = BASE_IMAGE_URL + movie.getPoster_path();
             String backdropUrl = BASE_IMAGE_URL + movie.getBackdrop_path();
             Glide.with(this)
@@ -88,10 +97,12 @@ public class DetailMovieActivity extends AppCompatActivity {
             collapsingToolbarLayout.setTitle(movie.getTitle());
             detailRating.setText(String.valueOf(movie.getVote_average()));
             detailRelease.setText(movie.getRelease_date());
+            movie.setMedia_type(media_type);
             loading(false);
-
         }
-        fab.setOnClickListener(new View.OnClickListener() {
+        Log.d("mediatype", "Favorite State : " + isFavorite);
+        Log.d("mediatype", "MediaType : " + media_type);
+        fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 markFavorite();
@@ -101,7 +112,7 @@ public class DetailMovieActivity extends AppCompatActivity {
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         toolbar.setTitle("");
@@ -110,8 +121,19 @@ public class DetailMovieActivity extends AppCompatActivity {
 
 
     private void markFavorite() {
-        viewModel.insert(movie);
-        Toast.makeText(this,"Added to Favorite",Toast.LENGTH_SHORT).show();
+        if (!isFavorite) {
+            viewModel.insert(movie, media_type);
+            fav.setImageResource(R.drawable.ic_favorite_black_24dp);
+            Toast.makeText(this, getResources().getString(R.string.fav_add), Toast.LENGTH_SHORT).show();
+            isFavorite = true;
+        } else if (isFavorite) {
+            viewModel.delete(movie);
+            fav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            isFavorite = false;
+            Toast.makeText(this, getResources().getString(R.string.fav_removed), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     private void loading(Boolean state) {
