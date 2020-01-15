@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MADEJAVA3</string>
+    <string name="title_movie">Movie</string>
+    <string name="title_tv_show">TV Show</string>
+    <string name="avengers">Avengers</string>
+    <string name="_87">87%</string>
+    <string name="_2018">2018</string>
+
+    <string name="image_movie">gambar movie</string>
+    <string name="_26_december_2018">26 Desember 2018</string>
+    <string name="overview">Sinopsis</string>
+    <string name="overview_detail">This is the Overview</string>
+    <string name="description">Deskripsi</string>
+    <string name="title">Judul :</string>
+    <string name="release_date">Tanggal Rilis :</string>
+    <string name="rating">Nilai :</string>
+    <string name="language">Bahasa</string>
+</resources>
