@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MADEJAVA5</string>
+    <string name="title_movie">Movie</string>
+    <string name="title_tv_show">TV Show</string>
+    <string name="avengers">Avengers</string>
+    <string name="_87">87%</string>
+    <string name="_2018">2018</string>
+
+    <string name="image_movie">image movie</string>
+    <string name="_26_december_2018">26 December 2018</string>
+    <string name="overview">Overview</string>
+    <string name="overview_detail">This is the Overview</string>
+    <string name="description">Description</string>
+    <string name="title">Title :</string>
+    <string name="release_date">Release Date :</string>
+    <string name="rating">Rating :</string>
+    <string name="language">Language</string>
+    <string name="fav_removed">Removed from Favorite</string>
+    <string name="fav_add">Added to Favorite</string>
+    <string name="favorite_menu">Favorite</string>
+    <string name="favorite">Favorite</string>
+</resources>
