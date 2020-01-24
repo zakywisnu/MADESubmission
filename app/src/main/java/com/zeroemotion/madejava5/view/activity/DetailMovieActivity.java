@@ -1,8 +1,12 @@
 package com.zeroemotion.madejava5.view.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -13,14 +17,19 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.zeroemotion.madejava5.R;
 import com.zeroemotion.madejava5.adapter.FavoriteAdapter;
+import com.zeroemotion.madejava5.database.MovieDao;
 import com.zeroemotion.madejava5.model.Movie;
 import com.zeroemotion.madejava5.viewmodel.FavoriteViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.zeroemotion.madejava5.widget.MovieBannerWidget;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -47,16 +56,17 @@ public class DetailMovieActivity extends AppCompatActivity {
     AppBarLayout appBarLayout;
     @BindView(R.id.collapse_toolbar)
     CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.btn_fav)
-    ImageButton fav;
 
     private FavoriteViewModel viewModel;
     String media_type;
+    private LiveData<Movie> movieLiveData;
 
-    static boolean isFavorite;
+    boolean isFavorite = false;
 
     private Movie movie;
+    private Menu menuItem;
     private FavoriteAdapter adapter;
+    private long id;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,11 +75,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         loading(true);
         Intent intent = getIntent();
         viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
-        if (isFavorite) {
-            fav.setImageResource(R.drawable.ic_favorite_black_24dp);
-        } else {
-            fav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-        }
+
 
         initToolbar();
         if (intent.hasExtra("movie")) {
@@ -98,17 +104,16 @@ public class DetailMovieActivity extends AppCompatActivity {
             detailRating.setText(String.valueOf(movie.getVote_average()));
             detailRelease.setText(movie.getRelease_date());
             movie.setMedia_type(media_type);
+            id = movie.getId();
             loading(false);
         }
         Log.d("mediatype", "Favorite State : " + isFavorite);
         Log.d("mediatype", "MediaType : " + media_type);
-        fav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                markFavorite();
-            }
-        });
+        Log.d("mediatype", "Movie ID : " + id);
+
+        movieLiveData = viewModel.selectMovie(id);
     }
+
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
@@ -121,20 +126,18 @@ public class DetailMovieActivity extends AppCompatActivity {
     }
 
 
-    private void markFavorite() {
-        if (!isFavorite) {
-            viewModel.insert(movie, media_type);
-            fav.setImageResource(R.drawable.ic_favorite_black_24dp);
-            Toast.makeText(this, getResources().getString(R.string.fav_add), Toast.LENGTH_SHORT).show();
-            isFavorite = true;
-        } else if (isFavorite) {
-            viewModel.delete(movie);
-            fav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-            isFavorite = false;
-            Toast.makeText(this, getResources().getString(R.string.fav_removed), Toast.LENGTH_SHORT).show();
-        }
-
-
+    private void favoriteState(){
+        movieLiveData.observe(this, it ->{
+            if (it != null){
+                menuItem.getItem(0).setIcon(R.drawable.ic_add_favorite_24dp);
+                isFavorite = true;
+            }
+            else {
+                menuItem.getItem(0).setIcon(R.drawable.ic_favorite_border);
+                isFavorite = false;
+            }
+            invalidateOptionsMenu();
+        });
     }
 
     private void loading(Boolean state) {
@@ -142,5 +145,52 @@ public class DetailMovieActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
         } else progressBar.setVisibility(View.GONE);
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.favorite_menu, menu);
+        menuItem = menu;
+        favoriteState();
+        Log.d("isfavorite","Favorite State : " + isFavorite);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.ic_fav) {
+            if (isFavorite) {
+                removeFavorite();
+            } else {
+                addToFavorite();
+            }
+            invalidateOptionsMenu();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void removeFavorite() {
+        viewModel.deleteById(id);
+        isFavorite = false;
+        menuItem.getItem(0).setIcon(R.drawable.ic_favorite_border);
+        Toast.makeText(this, getString(R.string.fav_removed), Toast.LENGTH_SHORT).show();
+        MovieBannerWidget.updateWidget(this);
+    }
+
+    private void addToFavorite() {
+        menuItem.getItem(0).setIcon(R.drawable.ic_add_favorite_24dp);
+        isFavorite = true;
+        Movie movies = new Movie();
+        movies.setMedia_type(media_type);
+        movies.setId(movie.getId());
+        movies.setTitle(movie.getTitle());
+        movies.setPoster_path(movie.getPoster_path());
+        movies.setBackdrop_path(movie.getBackdrop_path());
+        movies.setOverview(movie.getOverview());
+        movies.setRelease_date(movie.getRelease_date());
+        movies.setVote_average(movie.getVote_average());
+        viewModel.insert(movie);
+        Toast.makeText(this, getResources().getString(R.string.fav_add), Toast.LENGTH_SHORT).show();
+        MovieBannerWidget.updateWidget(this);
+    }
 }

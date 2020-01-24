@@ -31,12 +31,12 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
-                app:titleTextColor="#FFFFFF"
-                app:subtitleTextColor="#FFFFFF"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:subtitleTextColor="#FFFFFF"
+                app:titleTextColor="#FFFFFF" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -156,22 +156,17 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
                         <TextView
-                            android:layout_gravity="center_vertical"
                             style="@style/TextViewDefault"
                             android:layout_width="0dp"
-                            android:layout_weight="0.9"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.9"
                             android:text="@string/overview"
                             android:textSize="24sp" />
-
-                        <ImageButton
-                            android:id="@+id/btn_fav"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
 
                     </LinearLayout>
 

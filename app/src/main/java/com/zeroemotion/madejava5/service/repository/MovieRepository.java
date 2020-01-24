@@ -41,4 +41,23 @@ public class MovieRepository {
         });
         return listMovie;
     }
+
+    public MutableLiveData<ArrayList<Movie>> getSearchMovie(String type, String api_key, String query, String language){
+        MovieService movieService = MovieInstance.getService();
+        Call<MovieResponse> movieSearch = movieService.getSearch(type, api_key, query, language);
+        movieSearch.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                if (response.isSuccessful()){
+                    listMovie.setValue(response.body().getResults());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                Log.w("Response Failed", t.getMessage());
+            }
+        });
+        return listMovie;
+    }
 }

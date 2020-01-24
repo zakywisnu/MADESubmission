@@ -12,7 +12,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/language">
         <Preference
-            android:key="language_preference_key"
+            android:key="@string/LANGUAGEKEY"
             android:title="@string/change_language"/>
     </PreferenceCategory>
 

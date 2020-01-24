@@ -1,16 +1,21 @@
 package com.zeroemotion.madejava5.notification;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.widget.Toast;
 
 import com.zeroemotion.madejava5.R;
+
+import java.util.Calendar;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -50,5 +55,30 @@ public class DailyNotification extends BroadcastReceiver {
         if (notificationManager != null){
             notificationManager.notify(DailyNotification.ID_REMINDER, notification);
         }
+    }
+    public void setDailyReminder(Context context){
+        cancelDailyReminder(context);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, DailyNotification.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,ID_REMINDER,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,7);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+
+        assert alarmManager != null;
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        Toast.makeText(context,"Daily Reminder has been setup", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void cancelDailyReminder(Context context){
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, DailyNotification.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,102,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+
+        assert alarmManager !=null;
+        alarmManager.cancel(pendingIntent);
     }
 }

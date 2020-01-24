@@ -20,19 +20,24 @@ public class FavoriteViewModel extends AndroidViewModel{
         movieRepository = new FavoriteRepository(application);
     }
 
-    public LiveData<List<Movie>> getFavoriteList(){
-        return movieRepository.getAllMovie();
+    public LiveData<Movie> selectMovie(long movieId){
+        return movieRepository.selectById(movieId);
     }
 
     public LiveData<List<Movie>> getFavoriteType(String type){
         return movieRepository.getMovieByType(type);
     }
 
-    public void insert(Movie movie, String type){
-        movieRepository.insert(movie,type);
+
+    public void insert(Movie movie){
+        movieRepository.insert(movie);
     }
     public void delete(Movie movie){
         movieRepository.delete(movie);
+    }
+
+    public void deleteById(long movieId){
+        movieRepository.deleteId(movieId);
     }
 
 }

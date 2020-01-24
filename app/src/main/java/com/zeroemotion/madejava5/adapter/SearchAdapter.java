@@ -26,7 +26,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     private ArrayList<Movie> listMovie = new ArrayList<>();
     private SearchAdapter.OnItemClickCallback onItemClickCallback;
 
-    public SearchAdapter(OnItemClickCallback onItemClickCallback) {
+
+    public void setOnItemClickCallback(SearchAdapter.OnItemClickCallback onItemClickCallback) {
         this.onItemClickCallback = onItemClickCallback;
     }
 

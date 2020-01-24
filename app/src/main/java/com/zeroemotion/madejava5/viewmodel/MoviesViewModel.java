@@ -22,4 +22,8 @@ public class MoviesViewModel extends AndroidViewModel{
         return movieRepository.getListMovie(type, api_key);
     }
 
+    public LiveData<ArrayList<Movie>> getSearchMovie(String type, String api_key, String query, String language){
+        return movieRepository.getSearchMovie(type, api_key, query, language);
+    }
+
 }

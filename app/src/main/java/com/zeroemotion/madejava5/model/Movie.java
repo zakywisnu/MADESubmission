@@ -1,5 +1,6 @@
 package com.zeroemotion.madejava5.model;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,10 +9,13 @@ import com.google.gson.annotations.SerializedName;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "movie_table")
+@Entity(tableName = Movie.TABLE_NAME)
 public class Movie implements Parcelable {
+    public static final String TABLE_NAME = "movie_table";
 
-    private int id;
+
+    @PrimaryKey(autoGenerate = true)
+    private long id;
     @SerializedName(value = "title", alternate = {"name"})
     private String title;
     private String poster_path;
@@ -22,60 +26,43 @@ public class Movie implements Parcelable {
     private String backdrop_path;
     @SerializedName("media_type")
     private String media_type;
-    @PrimaryKey(autoGenerate = true)
-    private int uid;
 
     public Movie() {
 
     }
 
-    protected Movie(Parcel in) {
-        id = in.readInt();
-        title = in.readString();
-        poster_path = in.readString();
-        vote_average = in.readDouble();
-        overview = in.readString();
-        release_date = in.readString();
-        backdrop_path = in.readString();
-        media_type = in.readString();
-        uid = in.readInt();
-    }
+    public static Movie fromContentValues(ContentValues values){
+        Movie movie = new Movie();
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(title);
-        dest.writeString(poster_path);
-        dest.writeDouble(vote_average);
-        dest.writeString(overview);
-        dest.writeString(release_date);
-        dest.writeString(backdrop_path);
-        dest.writeString(media_type);
-        dest.writeInt(uid);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
+        if (values.containsKey("id")) {
+            movie.setId(values.getAsLong("id"));
         }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
+        if (values.containsKey("title")){
+            movie.setTitle(values.getAsString("title"));
         }
-    };
+        if (values.containsKey("name")){
+            movie.setTitle(values.getAsString("name"));
+        }
+        if (values.containsKey("poster_path")){
+            movie.setPoster_path(values.getAsString("poster_path"));
+        }
+        if (values.containsKey("overview")){
+            movie.setOverview(values.getAsString("overview"));
+        }
+        if (values.containsKey("vote_average")){
+            movie.setVote_average(values.getAsDouble("vote_average"));
+        }
+        if (values.containsKey("backdrop_path")){
+            movie.setBackdrop_path(values.getAsString("backdrop_path"));
+        }
+        return movie;
+    }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -135,12 +122,48 @@ public class Movie implements Parcelable {
         this.media_type = media_type;
     }
 
-    public int getUid() {
-        return uid;
+
+    public static Creator<Movie> getCREATOR() {
+        return CREATOR;
     }
 
-    public void setUid(int uid) {
-        this.uid = uid;
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeString(title);
+        parcel.writeString(poster_path);
+        parcel.writeDouble(vote_average);
+        parcel.writeString(overview);
+        parcel.writeString(release_date);
+        parcel.writeString(backdrop_path);
+        parcel.writeString(media_type);
+    }
+    protected Movie(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        poster_path = in.readString();
+        vote_average = in.readDouble();
+        overview = in.readString();
+        release_date = in.readString();
+        backdrop_path = in.readString();
+        media_type = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }
 
