@@ -28,7 +28,7 @@
         android:theme="@style/Theme.Design.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
         <provider
-            android:authorities="com.zeroemotion.madejava5"
+            android:authorities="com.zeroemotion.madejava5.provider"
             android:name="com.zeroemotion.madejava5.provider.MovieContentProvider"
             android:exported="true"
             android:readPermission="com.zeroemotion.madejava5.READ_DATABASE"

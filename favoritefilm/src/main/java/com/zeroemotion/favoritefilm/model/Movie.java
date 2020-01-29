@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class Movie {
     private long id;
-    @SerializedName(value = "title", alternate = "name")
     private String title;
     private String poster_path;
     private String overview;
@@ -21,6 +20,7 @@ public class Movie {
         title = cursor.getString(cursor.getColumnIndex("title"));
         poster_path = cursor.getString(cursor.getColumnIndex("poster_path"));
     }
+
 
     public Movie(long id, String title, String poster_path, String overview, Double vote_average) {
         this.id = id;

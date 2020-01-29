@@ -55,6 +55,9 @@ public class Movie implements Parcelable {
         if (values.containsKey("backdrop_path")){
             movie.setBackdrop_path(values.getAsString("backdrop_path"));
         }
+        if (values.containsKey("media_type")){
+            movie.setMedia_type(values.getAsString("media_type"));
+        }
         return movie;
     }
 

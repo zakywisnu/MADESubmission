@@ -38,6 +38,7 @@
     <string name="tv_show">tv</string>
     <string name="key_movie_search">Masukkan Judul</string>
     <string name="empty_text">Kosong</string>
+    <string name="film_widget">WIDGET FILM</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

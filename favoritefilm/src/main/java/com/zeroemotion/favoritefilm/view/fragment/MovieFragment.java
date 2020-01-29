@@ -12,12 +12,14 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.zeroemotion.favoritefilm.R;
 import com.zeroemotion.favoritefilm.adapter.FavoriteAdapter;
@@ -31,6 +33,11 @@ import java.util.List;
  */
 public class MovieFragment extends Fragment {
 
+    @BindView(R.id.movie_loading)
+    ProgressBar progressBar;
+    @BindView(R.id.refreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     private static final String PROVIDER_NAME = "com.zeroemotion.madejava5.provider";
     private static final String TABLE_NAME = "movie_table";
     private static final String URL = "content://" + PROVIDER_NAME + "/" + TABLE_NAME;
@@ -39,12 +46,14 @@ public class MovieFragment extends Fragment {
     @BindView(R.id.rv_movie)
     RecyclerView recyclerView;
     private FavoriteAdapter adapter;
+    private FavoriteViewModel viewModel;
 
     private Observer<List<Movie>> getMovie = new Observer<List<Movie>>() {
         @Override
         public void onChanged(List<Movie> movies) {
             if (movies != null){
                 adapter.setFavoriteMovie(movies);
+                loading(false);
             }
         }
     };
@@ -71,12 +80,33 @@ public class MovieFragment extends Fragment {
         adapter = new FavoriteAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
-        FavoriteViewModel viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
         viewModel.getMovieList().observe(this,getMovie);
         Cursor cursor = getContext().getContentResolver().query(CONTENT_URI,null,null,null);
         if (cursor != null){
             viewModel.setMovieList(cursor);
         }
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getMovieList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         adapter.notifyDataSetChanged();
+    }
+
+    public void getMovieList() {
+        viewModel.getMovieList().observe(this,getMovie);
+        Cursor cursor = getContext().getContentResolver().query(CONTENT_URI,null,null,null);
+        if (cursor != null){
+            viewModel.setMovieList(cursor);
+        }
+    }
+
+    public void loading(Boolean state) {
+        if (state) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else progressBar.setVisibility(View.GONE);
     }
 }

@@ -36,6 +36,7 @@
     <string name="tv_show">tv</string>
     <string name="key_movie_search">Enter the Title</string>
     <string name="empty_text">empty</string>
+    <string name="film_widget">FILM WIDGET</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
